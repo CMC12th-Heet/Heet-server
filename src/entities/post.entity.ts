@@ -4,12 +4,10 @@ import {
   Entity,
   JoinColumn,
   ManyToOne,
-  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
-import { Content } from './content.entity';
 import { User } from './user.entity';
-import { Like } from './like.entity';
+import { Store } from './store.entity';
 
 @Entity()
 export class Post extends BaseEntity {
@@ -19,16 +17,42 @@ export class Post extends BaseEntity {
   @Column()
   title: string;
 
-  // ----- post : content = 1 : N -----
+  @Column()
+  mini_title: string;
+
+  @Column()
+  content: string;
+
+  @Column()
+  fileUrl: string;
+
+  // --- 이하 선택 옵션
+  @Column({ default: null })
+  satisfaction: number; // 행복지수
+
+  @Column({ default: null })
+  together_with: string;
+
+  @Column({ default: null, length: 50 })
+  perfect_day: string;
+
+  @Column({ default: null, length: 50 })
+  moving_tip: string;
+
+  @Column({ default: null, length: 50 })
+  ordering_tip: string;
+
+  @Column({ default: null, length: 50 })
+  other_tips: string;
+
+  // ---------
+
+  // ----- User : post = 1 : N -----
   @ManyToOne((type) => User, (user) => user.user_id)
   user_id: User;
 
-  // ----- post : content = 1 : N -----
-  @OneToMany(() => Content, (content) => content.post_id)
+  // ----- Store : Post = 1 : N -----
+  @ManyToOne(() => Store, (store) => store.store_id)
   @JoinColumn()
-  content_id: Content[];
-
-  // ----- Post : Like = 1 : N -----
-  @OneToMany(() => Like, (like) => like.post_id)
-  like_id: Like[];
+  store_id: Store;
 }

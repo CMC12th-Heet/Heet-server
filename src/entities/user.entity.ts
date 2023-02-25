@@ -6,7 +6,6 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { Post } from './post.entity';
-import { Like } from './like.entity';
 
 @Entity()
 export class User extends BaseEntity {
@@ -33,6 +32,7 @@ export class User extends BaseEntity {
   post_id: Post[];
 
   // ----- User : Like = 1 : N -----
-  @OneToMany(() => Like, (like) => like.user_id)
-  like_id: Like[];
+  // @ManyToOne(() => City, (city) => city.city_id)
+  // @JoinColumn()
+  // city_id: City;
 }
