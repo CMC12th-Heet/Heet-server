@@ -11,6 +11,16 @@ export function setupSwagger(app: INestApplication): void {
     .setTitle('Heet API Document')
     .setDescription('Heet swagger..')
     .setVersion('1.0.0')
+    .addBearerAuth(
+      {
+        description: 'Enter token',
+        name: 'Authorization',
+        type: 'http',
+        scheme: 'bearer',
+        bearerFormat: 'bearer',
+      },
+      'Authorization',
+    )
     .build();
 
   const document = SwaggerModule.createDocument(app, options);
