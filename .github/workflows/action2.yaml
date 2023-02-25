@@ -16,7 +16,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
-          node-version: '14.x'
+          node-version: 16.16.0
 
       - name: Install dependencies
         run: npm install
@@ -29,9 +29,9 @@ jobs:
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          region: 'ap-northeast-2'
-          application_name: 'heet-server',
-          environment_name: 'Heetserver-env'
+          region: ap-northeast-2
+          application_name: heet-server,
+          environment_name: Heetserver-env
           version_label: ${{ github.sha }}
           deployment_package: ./
 
