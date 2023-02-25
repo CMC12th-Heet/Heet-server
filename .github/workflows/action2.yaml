@@ -34,7 +34,7 @@ jobs:
           application_name: heet-server,
           environment_name: Heetserver-env
           version_label: ${{ github.sha }}
-          deployment_package: ./
+          deployment_package: ./../../
 
       - name: Clean up
         run: rm -rf node_modules/ dist/
