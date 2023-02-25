@@ -30,7 +30,7 @@ jobs:
         shell: bash
 
 
-      - name: Deploy to Beanstalk
+      - name: Deploy to Beanstalk-
         uses: einaregilsson/beanstalk-deploy@v20
         with:
           aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
