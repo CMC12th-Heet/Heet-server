@@ -8,8 +8,8 @@ import { Repository } from 'typeorm';
 import { JwtService } from '@nestjs/jwt';
 import * as process from 'process';
 import { VerifyEmailDto } from './dto/verify-email.dto';
-import { CityList } from '../config/city.config';
 import { LoginUserDto } from './dto/login-user.dto';
+import { CityMeta } from '../config/city.meta';
 
 @Injectable()
 export class UserService {
@@ -37,8 +37,8 @@ export class UserService {
     const transporter = nodemailer.createTransport({
       service: 'Gmail',
       auth: {
-        user: 'youjin030700@gmail.com',
-        pass: 'eyishzjaprvyozbj',
+        user: process.env.EMAIL_ADDRESS,
+        pass: process.env.EMAIL_PASSWORD,
       },
     });
     const code: number = Date.now() + Number(process.env.RANDOM_NUMBER);
@@ -126,8 +126,11 @@ export class UserService {
   }
 
   showCity(cityName: string) {
-    console.log(cityName);
-    console.log(CityList.find((city) => city.name === cityName));
-    return CityList.find((city) => city.name === cityName);
+    let city: object;
+    if (cityName === 'incheon') city = { incheon: CityMeta.incheon };
+    if (cityName === 'seoul') city = { seoul: CityMeta.seoul };
+    if (cityName === 'gyeonggi') city = { gyeonggi: CityMeta.gyeonggi };
+
+    return Object.assign(city);
   }
 }

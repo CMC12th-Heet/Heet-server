@@ -1,11 +1,15 @@
-import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
-import { AuthGuard } from '@nestjs/passport';
-import { GetUser } from './user.decorator';
 import { VerifyEmailDto } from './dto/verify-email.dto';
 import { ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { LoginUserDto } from './dto/login-user.dto';
+
+enum CityEnum {
+  gyeonggi = 'gyeonggi',
+  seoul = 'seoul',
+  incheon = 'incheon',
+}
 
 @Controller('user')
 @ApiTags('유저 API')
