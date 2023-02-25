@@ -7,7 +7,7 @@ async function bootstrap() {
     logger: ['error', 'debug', 'log'],
   });
   setupSwagger(app);
-  await app.listen(3000);
+  await app.listen(8080);
 }
 
 bootstrap();
