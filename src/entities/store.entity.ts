@@ -22,8 +22,8 @@ export class Store extends BaseEntity {
   address: string;
 
   // ----- User : Post = 1:N ----
-  @OneToMany(() => Post, (post) => post.store_id)
-  post_id: Post[];
+  @OneToMany(() => Post, (post) => post.store)
+  post: Post[];
 
   // // ----- User : Like = 1 : N -----
   // @OneToMany(() => Like, (like) => like.user_id)

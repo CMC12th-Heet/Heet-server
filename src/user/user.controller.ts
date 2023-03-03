@@ -1,9 +1,11 @@
-import { Body, Controller, Get, Post, Query } from '@nestjs/common';
+import { Body, Controller, Get, Post, Query, UseGuards } from '@nestjs/common';
 import { UserService } from './user.service';
 import { CreateUserDto } from './dto/create-user.dto';
 import { VerifyEmailDto } from './dto/verify-email.dto';
 import { ApiBody, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
 import { LoginUserDto } from './dto/login-user.dto';
+import { AuthGuard } from '@nestjs/passport';
+import { GetUser } from './user.decorator';
 
 enum CityEnum {
   gyeonggi = 'gyeonggi',
@@ -58,5 +60,27 @@ export class UserController {
   @ApiQuery({ description: '지역구', name: 'name', enum: CityEnum })
   showCity(@Query('name') name: string) {
     return this.userService.showCity(name);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Get('/my-page')
+  @ApiOperation({
+    summary: '마이페이지 조회 API',
+    description: '마이페이지 들어가자마자 나오는 화면',
+  })
+  @ApiBody({ description: '회원가입용 정보', type: CreateUserDto })
+  viewMyPage(@GetUser() getUser) {
+    return this.userService.viewMyPage(getUser);
+  }
+
+  @UseGuards(AuthGuard('jwt'))
+  @Post('/my-page')
+  @ApiOperation({
+    summary: '마이페이지 수정 API',
+    description: '마이페이지 수정하기',
+  })
+  @ApiBody({ description: '회원가입용 정보', type: CreateUserDto })
+  editMyPage(@Body() createUserDto: CreateUserDto) {
+    return this.userService.create(createUserDto);
   }
 }

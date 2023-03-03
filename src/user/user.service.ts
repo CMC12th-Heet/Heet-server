@@ -133,4 +133,14 @@ export class UserService {
 
     return Object.assign(city);
   }
+
+  async viewMyPage(getUser) {
+    return await this.userRepository.findOne({
+      where: {
+        email: getUser.email,
+      },
+    });
+  }
+
+  editMyPage(getUser) {}
 }

@@ -1,6 +1,5 @@
 import { IsNotEmpty } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
-import { Type } from 'class-transformer';
 
 export class CreatePostDto {
   @IsNotEmpty()
@@ -19,7 +18,6 @@ export class CreatePostDto {
   @ApiProperty({ description: '선택한 장소 ID' })
   store_id: number;
 
-  @Type(() => Number)
   @ApiProperty({ description: '만족도' })
   satisfaction?: number;
 
