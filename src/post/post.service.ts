@@ -46,7 +46,20 @@ export class PostService {
     return post;
   }
 
-  async update(updatePostDto: UpdatePostDto) {}
+   async update(getUser, id, updatePostDto: UpdatePostDto) {
+     const user = await this.findUser(getUser.email);
+     const post = await this.postRepository.findOne({where:{post_id:id}});
+     if(post.user == user){
+       return  await this.postRepository
+         .createQueryBuilder()
+         .update(Post)
+         .set({ ...updatePostDto })
+         .where("postPostid = :id", { id: id }  )
+         .execute()
+     }
+     return {"message":"본인만 삭제할 수 있습니다."}
+
+ }
 
   async getFileLinks(files) {
     let imgPATHBundle = '';
@@ -85,9 +98,6 @@ export class PostService {
     return post;
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
-  }
 
   async verifyMyTown(getUser, x: string, y: string) {
     const user = await this.userRepository.findOne({
