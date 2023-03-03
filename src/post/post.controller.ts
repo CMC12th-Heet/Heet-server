@@ -54,15 +54,25 @@ export class PostController {
   ) {
     if (!(await this.postService.is_verify(getUser.email)))
       return new ForbiddenException('위치 인증을 먼저 해주세요.');
-    const fileUrl = await this.postService.getFileLinks(files);
-    return this.postService.create(getUser, createPostDto, fileUrl);
+    return this.postService.create(getUser, createPostDto, files);
   }
 
+  @ApiOperation({
+    summary: '전체 조회 API',
+    description: '전체 글 조회(로컬만)',
+  })
+  @ApiQuery({ description: '새로운 글 순서', name: 'isNew' })
+  @ApiQuery({ description: '인기 글 순서', name: 'isHot' })
   @Get()
-  findAll() {
-    return this.postService.findAll();
+  findAll(@Query('isNew') isNew: string, @Query('isHot') isHot: string) {
+    return this.postService.findAll(isNew, isHot);
   }
 
+  @ApiOperation({
+    summary: '게시글 상세 조회 API',
+    description: '게시글 상세 조회합니다.',
+  })
+  @ApiQuery({ description: '게시글 id', name: 'id' })
   @Get(':id')
   findOne(@Param('id') id: string) {
     return this.postService.findOne(+id);

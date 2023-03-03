@@ -22,40 +22,57 @@ export class PostService {
     private storeRepository: Repository<Store>,
   ) {}
 
-  async create(getUser, createPostDto: CreatePostDto, fileUrl: string) {
-    const user_id = await this.findUser(getUser.email);
-    const store_id = await this.findStore(createPostDto.store_id);
+  async create(getUser, createPostDto: CreatePostDto, files) {
+    const file_url = await this.getFileLinks(files);
+    const user = await this.findUser(getUser.email);
+    const store = await this.findStore(createPostDto.store_id);
+    const is_local = store.address.includes(user.town);
+
+    const satisfaction = createPostDto.satisfaction
+      ? Number(createPostDto.satisfaction)
+      : null;
 
     const post = await this.postRepository.create({
       ...createPostDto,
-      user_id,
-      store_id,
-      fileUrl,
+      user,
+      store,
+      file_url,
+      satisfaction,
+      is_local,
     });
-    await this.postRepository
-      .save(post)
-      .then((post) => {
-        console.log(post);
-        return post;
-      })
-      .catch((e) => {
-        return e;
-      });
+    await this.postRepository.save(post).catch((e) => {
+      return e;
+    });
+    return post;
   }
 
+  async update(updatePostDto: UpdatePostDto) {}
+
   async getFileLinks(files) {
-    console.log('in');
     let imgPATHBundle = '';
-    await files.map(async (file: Express.Multer.File) => {
-      const key = await this.uploadService.uploadImage(file);
-      imgPATHBundle += `${key};`;
-      console.log(key);
-    });
+    await Promise.all(
+      files.map(async (file: Express.Multer.File) => {
+        const key = await this.uploadService.uploadImage(file);
+        imgPATHBundle += `${key};`;
+      }),
+    );
     return imgPATHBundle;
   }
 
-  findAll() {
-    return `This action returns all post`;
+  async findAll(isNew, isHot) {
+    const posts = await this.postRepository.find({
+      where: {
+        is_local: true,
+      },
+      order: {
+        created_at: isNew ? 'ASC' : 'DESC',
+      },
+    });
+    posts.map((value, index) => {
+      value['urlList'] = value.file_url.slice(0, -1).split(';');
+      if (!value.is_local) delete value[index]; // error 날수도 있음
+    });
+    return posts;
   }
 
   async findOne(id: number) {
@@ -64,7 +81,7 @@ export class PostService {
         post_id: id,
       },
     });
-    post['urlList'] = post.fileUrl.split(';');
+    post['urlList'] = post.file_url.slice(0, -1).split(';');
     return post;
   }
 
@@ -77,8 +94,6 @@ export class PostService {
       where: { email: getUser.email },
     });
     const userAddress = await this.mapService.getUserAddressFromPosition(x, y);
-    console.log(userAddress);
-    console.log(user.town);
     if (userAddress.includes(user.town) && user.is_verify == false) {
       await this.userRepository
         .createQueryBuilder()

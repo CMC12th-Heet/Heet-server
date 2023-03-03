@@ -17,6 +17,8 @@ export class UploadService {
   }
 
   async uploadImage(file: Express.Multer.File) {
+    console.log('in');
+    console.log(file);
     const key = `${Date.now() + file.originalname}`; // uuid?
     const params = {
       Bucket: process.env.AWS_S3_BUCKET,
