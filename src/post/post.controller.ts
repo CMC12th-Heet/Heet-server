@@ -79,7 +79,11 @@ export class PostController {
   }
 
   @Patch(':id')
-  update(@GetUser() getUser, @Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
+  update(
+    @GetUser() getUser,
+    @Param('id') id: string,
+    @Body() updatePostDto: UpdatePostDto,
+  ) {
     return this.postService.update(getUser, +id, updatePostDto);
   }
 
