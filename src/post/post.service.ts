@@ -46,7 +46,9 @@ export class PostService {
     return post;
   }
 
+
   async update(getUser, id, updatePostDto: UpdatePostDto) {}
+
 
   async getFileLinks(files) {
     let imgPATHBundle = '';
@@ -84,6 +86,7 @@ export class PostService {
     post['urlList'] = post.file_url.slice(0, -1).split(';');
     return post;
   }
+
 
   async verifyMyTown(getUser, x: string, y: string) {
     const user = await this.userRepository.findOne({
