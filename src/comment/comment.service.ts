@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateCommentDto } from './dto/create-comment.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../entities/user.entity';
@@ -17,7 +17,11 @@ export class CommentService {
     private postRepository: Repository<Post>,
   ) {}
 
-  async create(getUser, createCommentDto: CreateCommentDto, postId: number) {
+  async createComment(
+    getUser,
+    createCommentDto: CreateCommentDto,
+    postId: number,
+  ) {
     const user = (await this.findUser(getUser.email)) || null;
     const post = (await this.findPost(postId)) || null;
     const comment = await this.commentRepository.create({
@@ -28,13 +32,21 @@ export class CommentService {
     await this.commentRepository.save(comment);
   }
 
-  async findOne(id: number) {
+  async findPostComment(id: number) {
     const post = await this.findPost(id);
     return await this.commentRepository
       .createQueryBuilder('u')
       .leftJoinAndSelect('u.user', 'g')
       .where('u.postPostId = :id', { id: post.post_id })
       .getMany();
+  }
+
+  async deleteComment(id: number) {
+    const result = await this.commentRepository.delete(id);
+    if (result.affected === 0) {
+      throw new NotFoundException('댓글을 찾을 수 없습니다.');
+    }
+    return { message: 'gooood' };
   }
 
   async findUser(email) {

@@ -25,12 +25,12 @@ export class CommentController {
   @ApiParam({ description: '게시글 id', name: 'id' })
   @ApiBody({ description: '게시글 내용', type: CreateCommentDto })
   @Post(':id')
-  create(
+  createComment(
     @GetUser() getUser,
     @Body() createCommentDto: CreateCommentDto,
     @Param('id') id: string,
   ) {
-    return this.commentService.create(getUser, createCommentDto, +id);
+    return this.commentService.createComment(getUser, createCommentDto, +id);
   }
 
   @ApiOperation({
@@ -39,7 +39,17 @@ export class CommentController {
   })
   @ApiParam({ description: '게시글 id', name: 'id' })
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.commentService.findOne(+id);
+  findPostComment(@Param('id') id: string) {
+    return this.commentService.findPostComment(+id);
+  }
+
+  @ApiOperation({
+    summary: '댓글 삭제 API',
+    description: '댓글을 삭제한다',
+  })
+  @ApiParam({ description: '댓글 id', name: 'id' })
+  @Get(':id')
+  deleteComment(@Param('id') id: string) {
+    return this.commentService.deleteComment(+id);
   }
 }

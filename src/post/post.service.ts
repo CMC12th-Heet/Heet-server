@@ -46,7 +46,7 @@ export class PostService {
     return post;
   }
 
-  async update(updatePostDto: UpdatePostDto) {}
+  async update(getUser, id, updatePostDto: UpdatePostDto) {}
 
   async getFileLinks(files) {
     let imgPATHBundle = '';
@@ -83,10 +83,6 @@ export class PostService {
     });
     post['urlList'] = post.file_url.slice(0, -1).split(';');
     return post;
-  }
-
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
   }
 
   async verifyMyTown(getUser, x: string, y: string) {
